@@ -1,6 +1,6 @@
 /* =====================================================================
    FelFel Manager — Ultimate Complete Version
-   HTML + Vanilla JS. جميع الميزات مدمجة.
+   Full CRUD + Edit/Delete + Charts + Alerts + PIN + Backup + i18n
    ===================================================================== */
 
 /* ========== i18n ========== */
@@ -50,12 +50,13 @@ const I18N = {
     'cashbox.category':'التصنيف','cashbox.direction':'الاتجاه','cashbox.noMovements':'لا توجد حركات',
     'cashbox.reason':'السبب','cashbox.setOpening':'ضبط الافتتاحي',
     'workers.title':'العمال والأجور','workers.new':'عامل جديد','workers.name':'الاسم',
-    'workers.rate':'أجر الشكارة','workers.bagsWorked':'شكاير','workers.earned':'المستحق',
+    'workers.rate':'أجر اليوم','workers.bagsWorked':'شكاير','workers.earned':'المستحق',
     'workers.paid':'المدفوع','workers.balance':'المتبقي','workers.pay':'دفع',
     'workers.active':'نشط','workers.inactive':'موقوف','workers.noWorkers':'لا يوجد عمال',
     'partners.title':'الشركاء والأرباح','partners.name':'الشريك','partners.share':'النسبة %',
     'partners.profitShare':'نصيب الربح','partners.drawings':'المسحوبات','partners.balance':'الرصيد',
     'partners.withdraw':'سحب','partners.periodProfit':'ربح الفترة','partners.availableCash':'نقدية متاحة',
+    'partners.drawingsList':'سجل المسحوبات',
     'reports.title':'التقارير','reports.period':'الفترة','reports.from':'من','reports.to':'إلى',
     'reports.salesByCustomer':'مبيعات حسب العميل','reports.salesByProduct':'مبيعات حسب الدفعة',
     'reports.customerDebts':'ديون العملاء','reports.expensesByCat':'مصاريف حسب التصنيف',
@@ -104,9 +105,22 @@ const I18N = {
     'installments.dueDate':'تاريخ الاستحقاق','installments.overdue':'متأخر',
     'export.excel':'تصدير Excel','qr.title':'باركود الفاتورة',
     'action.invoice_created':'إنشاء فاتورة','action.invoice_cancelled':'إلغاء فاتورة',
-    'action.batch_created':'إنشاء دفعة','action.expense_created':'إضافة مصروف',
-    'action.payment':'تحصيل','action.withdrawal':'سحب شريك','action.adjust':'تسوية',
+    'action.invoice_edited':'تعديل فاتورة','action.batch_created':'إنشاء دفعة',
+    'action.batch_edited':'تعديل دفعة','action.batch_deleted':'حذف دفعة',
+    'action.expense_created':'إضافة مصروف','action.expense_edited':'تعديل مصروف',
+    'action.expense_deleted':'حذف مصروف','action.payment':'تحصيل',
+    'action.withdrawal':'سحب شريك','action.drawing_edited':'تعديل سحب',
+    'action.drawing_deleted':'حذف سحب','action.adjust':'تسوية',
     'action.settings':'تعديل إعدادات','action.worker_payment':'دفع أجرة',
+    'action.customer_edited':'تعديل عميل','action.customer_deleted':'حذف عميل',
+    'action.worker_edited':'تعديل عامل','action.worker_deleted':'حذف عامل',
+    'action.cash_edited':'تعديل حركة خزنة','action.cash_deleted':'حذف حركة خزنة',
+    'msg.cannotEditSoldBatch':'لا يمكن تعديل دفعة تم بيع جزء منها',
+    'msg.cannotDeleteSoldBatch':'لا يمكن حذف دفعة تم بيع جزء منها',
+    'msg.customerHasInvoices':'لا يمكن حذف عميل له فواتير',
+    'msg.workerHasWages':'لا يمكن حذف عامل له أجور مسجلة',
+    'msg.cashAutoOnly':'هذه الحركة مرتبطة بسجل آخر. عدّل السجل الأصلي',
+    'msg.editHintInvoice':'لتعديل البنود أو المبلغ المدفوع، ألغِ الفاتورة وأنشئ واحدة جديدة',
   },
   en: {
     'brand.tagline':'Manager',
@@ -158,6 +172,7 @@ const I18N = {
     'partners.title':'Partners & Profit','partners.name':'Partner','partners.share':'Share %',
     'partners.profitShare':'Profit Share','partners.drawings':'Drawings','partners.balance':'Balance',
     'partners.withdraw':'Withdraw','partners.periodProfit':'Period Profit','partners.availableCash':'Available Cash',
+    'partners.drawingsList':'Drawings History',
     'reports.title':'Reports','reports.period':'Period','reports.from':'From','reports.to':'To',
     'reports.salesByCustomer':'Sales by Customer','reports.salesByProduct':'Sales by Batch',
     'reports.customerDebts':'Customer Debts','reports.expensesByCat':'Expenses by Category',
@@ -206,15 +221,28 @@ const I18N = {
     'installments.dueDate':'Due Date','installments.overdue':'Overdue',
     'export.excel':'Export Excel','qr.title':'Invoice QR',
     'action.invoice_created':'Invoice Created','action.invoice_cancelled':'Invoice Cancelled',
-    'action.batch_created':'Batch Created','action.expense_created':'Expense Added',
-    'action.payment':'Collection','action.withdrawal':'Partner Withdrawal','action.adjust':'Adjustment',
+    'action.invoice_edited':'Invoice Edited','action.batch_created':'Batch Created',
+    'action.batch_edited':'Batch Edited','action.batch_deleted':'Batch Deleted',
+    'action.expense_created':'Expense Added','action.expense_edited':'Expense Edited',
+    'action.expense_deleted':'Expense Deleted','action.payment':'Collection',
+    'action.withdrawal':'Partner Withdrawal','action.drawing_edited':'Drawing Edited',
+    'action.drawing_deleted':'Drawing Deleted','action.adjust':'Adjustment',
     'action.settings':'Settings Changed','action.worker_payment':'Worker Payment',
+    'action.customer_edited':'Customer Edited','action.customer_deleted':'Customer Deleted',
+    'action.worker_edited':'Worker Edited','action.worker_deleted':'Worker Deleted',
+    'action.cash_edited':'Cash Movement Edited','action.cash_deleted':'Cash Movement Deleted',
+    'msg.cannotEditSoldBatch':'Cannot edit a batch with sold items',
+    'msg.cannotDeleteSoldBatch':'Cannot delete a batch with sold items',
+    'msg.customerHasInvoices':'Cannot delete a customer with invoices',
+    'msg.workerHasWages':'Cannot delete a worker with recorded wages',
+    'msg.cashAutoOnly':'This movement is linked to another record. Edit the source',
+    'msg.editHintInvoice':'To change items or paid amount, cancel and recreate',
   }
 };
 
 let LANG = localStorage.getItem('ff_lang') || 'ar';
 let THEME = localStorage.getItem('ff_theme') || 'dark';
-let ACCENT = localStorage.getItem('ff_accent') || '#22c55e';
+let ACCENT = localStorage.getItem('ff_accent') || '#0FB864';
 let SOUND_ON = localStorage.getItem('ff_sound') !== 'off';
 
 const t = (k) => (I18N[LANG] && I18N[LANG][k]) || k;
@@ -233,16 +261,16 @@ function applyTheme() {
   const tb = document.getElementById('themeBtn');
   if (tb) tb.textContent = THEME === 'dark' ? '☀' : '☾';
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', THEME === 'dark' ? '#07090d' : '#eef2f8');
+  if (meta) meta.setAttribute('content', THEME === 'dark' ? '#050505' : '#fafcfb');
 }
 function applyAccent(color) {
   ACCENT = color;
   document.documentElement.style.setProperty('--accent', color);
-  document.documentElement.style.setProperty('--accent-glow', color + '59');
+  document.documentElement.style.setProperty('--accent-glow', color + '8C');
   localStorage.setItem('ff_accent', color);
 }
 
-/* ========== Sound Engine ========== */
+/* ========== Sound ========== */
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 function playSound(type) {
@@ -275,7 +303,7 @@ function fireConfetti() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   canvas.classList.add('active');
-  const colors = ['#22c55e','#10b981','#3b82f6','#f59e0b','#a855f7','#ef4444'];
+  const colors = ['#0FB864','#16DD79','#0A9A52','#34E68C','#046A38','#16DD79'];
   confettiParticles = [];
   for (let i = 0; i < 100; i++) {
     confettiParticles.push({
@@ -485,7 +513,7 @@ function updateCashPill() {
   if (el) el.textContent = t('cashbox.current') + ': ' + fmt(Calc.cashBalance());
 }
 
-/* ========== Smart Alerts ========== */
+/* ========== Alerts ========== */
 function peekAlerts() {
   const alerts = [];
   const overdue = state.customers.filter(c => {
@@ -653,43 +681,56 @@ function renderInventory() {
       </tr></thead><tbody>
         ${state.batches.map(b => {
           const rem = Math.max(0, num(b.availableQty) - num(b.soldQty));
+          const hasSold = num(b.soldQty) > 0;
           return `<tr>
             <td>${esc(b.date)}</td><td>${fmtNum(b.bags)}</td><td>${esc(b.supplier || '-')}</td>
             <td>${fmt(b.purchasePrice)}</td><td>${fmtNum(b.netWeight)}</td><td>${fmtNum(b.waste)}</td>
             <td>${fmtNum(b.availableQty)}</td><td>${fmtNum(b.soldQty)}</td><td><b>${fmtNum(rem)}</b></td>
             <td>${fmt(b.unitCost)}</td><td>${fmt(Calc.kiloCost(b))}</td>
-            <td><button class="btn btn-sm btn-secondary" onclick="openAdjustBatch('${b.id}')">${t('inventory.adjust')}</button></td>
+            <td>
+              ${!hasSold ? `<button class="btn btn-sm btn-secondary" onclick="openBatchModal('${b.id}')" title="${t('common.edit')}">✏️</button> ` : ''}
+              <button class="btn btn-sm btn-secondary" onclick="openAdjustBatch('${b.id}')">${t('inventory.adjust')}</button>
+              ${!hasSold ? ` <button class="btn btn-sm btn-danger" onclick="deleteBatch('${b.id}')" title="${t('common.delete')}">🗑️</button>` : ''}
+            </td>
           </tr>`;
         }).join('')}
       </tbody></table></div>`}
     </div>`;
 }
-function openBatchModal() {
+function openBatchModal(id) {
+  const existing = id ? state.batches.find(b => b.id === id) : null;
   const workers = state.workers.filter(w => w.active);
-  openModal(t('inventory.addBatch'), `
+  const selectedIds = existing ? (existing.workerIds || []) : [];
+  openModal((existing ? t('common.edit') : t('inventory.addBatch')),
+    `<input type="hidden" id="b_id" value="${existing ? existing.id : ''}">
     <div class="form-grid">
-      <div class="form-group"><label>${t('common.date')}</label><input type="date" id="b_date" value="${todayISO()}"></div>
-      <div class="form-group"><label>${t('inventory.bags')}</label><input type="number" id="b_bags" value="1" min="1"></div>
-      <div class="form-group"><label>${t('inventory.supplier')}</label><input id="b_supplier"></div>
-      <div class="form-group"><label>${t('inventory.purchasePrice')}</label><input type="number" id="b_purchasePrice" value="${state.settings.buyPrice}"></div>
-      <div class="form-group"><label>${t('inventory.rawWeight')}</label><input type="number" id="b_rawWeight" value="0" step="0.01"></div>
-      <div class="form-group"><label>${t('inventory.netWeight')}</label><input type="number" id="b_netWeight" value="0" step="0.01"></div>
-      <div class="form-group"><label>${t('inventory.processingCost')}</label><input type="number" id="b_procCost" value="0"></div>
+      <div class="form-group"><label>${t('common.date')}</label><input type="date" id="b_date" value="${existing ? existing.date : todayISO()}"></div>
+      <div class="form-group"><label>${t('inventory.bags')}</label><input type="number" id="b_bags" value="${existing ? existing.bags : 1}" min="1"></div>
+      <div class="form-group"><label>${t('inventory.supplier')}</label><input id="b_supplier" value="${existing ? esc(existing.supplier || '') : ''}"></div>
+      <div class="form-group"><label>${t('inventory.purchasePrice')}</label><input type="number" id="b_purchasePrice" value="${existing ? existing.purchasePrice : state.settings.buyPrice}"></div>
+      <div class="form-group"><label>${t('inventory.rawWeight')}</label><input type="number" id="b_rawWeight" value="${existing ? existing.rawWeight : 0}" step="0.01"></div>
+      <div class="form-group"><label>${t('inventory.netWeight')}</label><input type="number" id="b_netWeight" value="${existing ? existing.netWeight : 0}" step="0.01"></div>
+      <div class="form-group"><label>${t('inventory.processingCost')}</label><input type="number" id="b_procCost" value="${existing ? existing.processingCost : 0}"></div>
       <div class="form-group"><label>${t('inventory.workers')}</label>
-        <select id="b_workers" multiple size="3">${workers.map(w => `<option value="${w.id}">${esc(w.name)}</option>`).join('')}</select>
+        <select id="b_workers" multiple size="3">${workers.map(w => `<option value="${w.id}" ${selectedIds.includes(w.id) ? 'selected' : ''}>${esc(w.name)}</option>`).join('')}</select>
       </div>
-      <div class="form-group full"><label>${t('common.notes')}</label><textarea id="b_notes"></textarea></div>
+      <div class="form-group full"><label>${t('common.notes')}</label><textarea id="b_notes">${existing ? esc(existing.notes || '') : ''}</textarea></div>
     </div>`,
     `<button class="btn btn-secondary" onclick="closeModal()">${t('common.cancel')}</button>
      <button class="btn btn-primary" onclick="saveBatch()">${t('common.save')}</button>`);
 }
 function saveBatch() {
+  const id = document.getElementById('b_id').value;
+  const existing = id ? state.batches.find(b => b.id === id) : null;
+  if (existing && num(existing.soldQty) > 0) { toast(t('msg.cannotEditSoldBatch'), 'error'); return; }
   const date = document.getElementById('b_date').value;
   const bags = num(document.getElementById('b_bags').value);
   const purchasePrice = num(document.getElementById('b_purchasePrice').value);
   const rawWeight = num(document.getElementById('b_rawWeight').value);
   const netWeight = num(document.getElementById('b_netWeight').value);
   const procCost = num(document.getElementById('b_procCost').value);
+  const supplier = document.getElementById('b_supplier').value.trim();
+  const notes = document.getElementById('b_notes').value.trim();
   if (!date || bags <= 0) { toast(t('toast.invalid'), 'error'); return; }
   const selected = Array.from(document.getElementById('b_workers').selectedOptions).map(o => o.value);
   let wagesCost = 0;
@@ -698,20 +739,50 @@ function saveBatch() {
     const w = state.workers.find(x => x.id === wid);
     if (w) { const a = bags * num(w.rate); wagesCost += a; wageEntries.push({ id: uid('wage'), workerId: wid, bags, rate: num(w.rate), amount: a, date }); }
   });
-  const batch = {
-    id: uid('batch'), date, bags, supplier: document.getElementById('b_supplier').value.trim(),
-    purchasePrice, rawWeight, netWeight, waste: Math.max(0, rawWeight - netWeight),
-    availableQty: netWeight || rawWeight, soldQty: 0, processingCost: procCost, wagesCost, unitCost: 0,
-    workerIds: selected, notes: document.getElementById('b_notes').value.trim(),
-  };
-  batch.unitCost = Calc.batchUnitCost(batch);
-  state.batches.push(batch);
-  wageEntries.forEach(w => { w.batchId = batch.id; state.wageEntries.push(w); });
-  addCashMovement({ date, type: 'inventory_purchase', category: t('inventory.bags'), direction: 'out', amount: purchasePrice * bags, method: 'cash', refId: batch.id, notes: batch.supplier });
-  if (procCost > 0) addCashMovement({ date, type: 'processing', category: t('inventory.processingCost'), direction: 'out', amount: procCost, method: 'cash', refId: batch.id });
-  state.auditLog.push({ id: uid('log'), date, action: 'batch_created', details: `#${bags} bag(s)` });
+  if (existing) {
+    state.cashMovements = state.cashMovements.filter(m => m.refId !== existing.id);
+    state.wageEntries = state.wageEntries.filter(w => w.batchId !== existing.id);
+    Object.assign(existing, {
+      date, bags, supplier, purchasePrice, rawWeight, netWeight,
+      waste: Math.max(0, rawWeight - netWeight),
+      availableQty: netWeight || rawWeight,
+      processingCost: procCost, wagesCost,
+      workerIds: selected, notes
+    });
+    existing.unitCost = Calc.batchUnitCost(existing);
+    wageEntries.forEach(w => { w.batchId = existing.id; state.wageEntries.push(w); });
+    addCashMovement({ date, type: 'inventory_purchase', category: t('inventory.bags'), direction: 'out', amount: purchasePrice * bags, method: 'cash', refId: existing.id, notes: supplier });
+    if (procCost > 0) addCashMovement({ date, type: 'processing', category: t('inventory.processingCost'), direction: 'out', amount: procCost, method: 'cash', refId: existing.id });
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'batch_edited', details: existing.id });
+  } else {
+    const batch = {
+      id: uid('batch'), date, bags, supplier, purchasePrice, rawWeight, netWeight,
+      waste: Math.max(0, rawWeight - netWeight),
+      availableQty: netWeight || rawWeight, soldQty: 0,
+      processingCost: procCost, wagesCost, unitCost: 0,
+      workerIds: selected, notes,
+    };
+    batch.unitCost = Calc.batchUnitCost(batch);
+    state.batches.push(batch);
+    wageEntries.forEach(w => { w.batchId = batch.id; state.wageEntries.push(w); });
+    addCashMovement({ date, type: 'inventory_purchase', category: t('inventory.bags'), direction: 'out', amount: purchasePrice * bags, method: 'cash', refId: batch.id, notes: supplier });
+    if (procCost > 0) addCashMovement({ date, type: 'processing', category: t('inventory.processingCost'), direction: 'out', amount: procCost, method: 'cash', refId: batch.id });
+    state.auditLog.push({ id: uid('log'), date, action: 'batch_created', details: `#${bags} bag(s)` });
+  }
   saveState(); closeModal(); toast(t('toast.saved'));
   fireConfetti(); renderInventory(); updateCashPill();
+}
+function deleteBatch(id) {
+  const b = state.batches.find(x => x.id === id);
+  if (!b) return;
+  if (num(b.soldQty) > 0) { toast(t('msg.cannotDeleteSoldBatch'), 'error'); return; }
+  confirmDialog(t('toast.confirmDelete'), `${b.date} — ${fmtNum(b.bags)} ${t('inventory.bags')}`, () => {
+    state.cashMovements = state.cashMovements.filter(m => m.refId !== id);
+    state.wageEntries = state.wageEntries.filter(w => w.batchId !== id);
+    state.batches = state.batches.filter(x => x.id !== id);
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'batch_deleted', details: id });
+    saveState(); toast(t('toast.deleted')); renderInventory(); updateCashPill();
+  });
 }
 function openAdjustBatch(id) {
   const b = state.batches.find(x => x.id === id);
@@ -757,6 +828,7 @@ function renderSales() {
             <td>${fmt(inv.total)}</td><td>${fmt(inv.paid)}</td><td>${fmt(rem)}</td>
             <td>${st}</td>
             <td>
+              ${inv.status !== 'cancelled' ? `<button class="btn btn-sm btn-secondary" onclick="openEditInvoice('${inv.id}')" title="${t('common.edit')}">✏️</button> ` : ''}
               ${inv.status !== 'cancelled' ? `<button class="btn btn-sm btn-secondary" onclick="printInvoice('${inv.id}')" title="${t('invoice.print')}">🖨</button> ` : ''}
               ${inv.status !== 'cancelled' ? `<button class="btn btn-sm btn-secondary" onclick="repeatInvoice('${inv.id}')" title="${t('invoice.repeat')}">↻</button> ` : ''}
               ${inv.status !== 'cancelled' && rem > 0 ? `<button class="btn btn-sm btn-primary" onclick="openCollectModal('${inv.id}')">${t('customers.collect')}</button> ` : ''}
@@ -832,6 +904,42 @@ function saveInvoice() {
   if (paid > 0) addCashMovement({ date, type: 'sale', category: t('sales.invoice'), direction: 'in', amount: paid, method: 'cash', refId: inv.id });
   state.auditLog.push({ id: uid('log'), date, action: 'invoice_created', details: '#' + no });
   saveState(); closeModal(); toast(t('toast.saved')); fireConfetti(); renderSales(); updateCashPill();
+}
+function openEditInvoice(id) {
+  const inv = state.invoices.find(x => x.id === id);
+  if (!inv) return;
+  openModal(t('common.edit') + ' — #' + inv.no, `
+    <input type="hidden" id="inv_id" value="${id}">
+    <div class="form-grid">
+      <div class="form-group"><label>${t('common.date')}</label><input type="date" id="inv_date" value="${inv.date}"></div>
+      <div class="form-group"><label>${t('sales.customer')}</label>
+        <select id="inv_customer">${state.customers.map(c => `<option value="${c.id}" ${c.id === inv.customerId ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><label>${t('sales.discount')}</label><input type="number" id="inv_discount" value="${inv.discount || 0}"></div>
+      <div class="form-group"><label>${t('installments.dueDate')}</label><input type="date" id="inv_dueDate" value="${inv.dueDate || ''}"></div>
+    </div>
+    <div class="form-group full mt-16"><label>${t('common.notes')}</label><textarea id="inv_notes">${esc(inv.notes || '')}</textarea></div>
+    <div class="mt-16 text-muted" style="font-size:12px">${t('msg.editHintInvoice')}</div>`,
+    `<button class="btn btn-secondary" onclick="closeModal()">${t('common.cancel')}</button>
+     <button class="btn btn-primary" onclick="saveEditInvoice()">${t('common.save')}</button>`);
+}
+function saveEditInvoice() {
+  const id = document.getElementById('inv_id').value;
+  const inv = state.invoices.find(x => x.id === id);
+  if (!inv) return;
+  const discount = num(document.getElementById('inv_discount').value);
+  const subtotal = inv.items.reduce((s, it) => s + it.qty * it.price, 0);
+  const newTotal = subtotal - discount;
+  if (newTotal < num(inv.paid)) { toast(t('toast.invalid'), 'error'); return; }
+  inv.date = document.getElementById('inv_date').value;
+  inv.customerId = document.getElementById('inv_customer').value;
+  inv.discount = discount;
+  inv.total = newTotal;
+  inv.remaining = newTotal - num(inv.paid);
+  inv.dueDate = document.getElementById('inv_dueDate').value;
+  inv.notes = document.getElementById('inv_notes').value;
+  state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'invoice_edited', details: '#' + inv.no });
+  saveState(); closeModal(); toast(t('toast.saved')); renderSales(); updateCashPill();
 }
 function cancelInvoice(id) {
   confirmDialog(t('toast.confirmDelete'), '', () => {
@@ -963,29 +1071,56 @@ function renderCustomers() {
             <td>${i + 1}</td><td>${esc(c.name)}</td><td>${esc(c.phone || '-')}</td>
             <td>${fmt(totInv)}</td><td>${fmt(totPaid)}</td>
             <td class="${bal <= 0 ? 'text-success' : (invD > 30 ? 'overdue' : 'due-warn')}"><b>${fmt(bal)}</b></td>
-            <td><button class="btn btn-sm btn-secondary" onclick="openStatement('${c.id}')">${t('customers.statement')}</button></td>
+            <td>
+              <button class="btn btn-sm btn-secondary" onclick="openStatement('${c.id}')">${t('customers.statement')}</button>
+              <button class="btn btn-sm btn-secondary" onclick="openCustomerModal('${c.id}')" title="${t('common.edit')}">✏️</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteCustomer('${c.id}')" title="${t('common.delete')}">🗑️</button>
+            </td>
           </tr>`;
         }).join('')}
       </tbody></table></div>`}
     </div>`;
 }
-function openCustomerModal() {
-  openModal(t('customers.new'), `
+function openCustomerModal(id) {
+  const existing = id ? state.customers.find(c => c.id === id) : null;
+  openModal((existing ? t('common.edit') : t('customers.new')), `
+    <input type="hidden" id="c_id" value="${existing ? existing.id : ''}">
     <div class="form-grid">
-      <div class="form-group"><label>${t('customers.name')}</label><input id="c_name"></div>
-      <div class="form-group"><label>${t('customers.phone')}</label><input id="c_phone"></div>
-      <div class="form-group"><label>${t('customers.address')}</label><input id="c_address"></div>
-      <div class="form-group"><label>${t('customers.defaultPrice')}</label><input type="number" id="c_defaultPrice" value="${state.settings.sellPrice}"></div>
+      <div class="form-group"><label>${t('customers.name')}</label><input id="c_name" value="${existing ? esc(existing.name) : ''}"></div>
+      <div class="form-group"><label>${t('customers.phone')}</label><input id="c_phone" value="${existing ? esc(existing.phone || '') : ''}"></div>
+      <div class="form-group"><label>${t('customers.address')}</label><input id="c_address" value="${existing ? esc(existing.address || '') : ''}"></div>
+      <div class="form-group"><label>${t('customers.defaultPrice')}</label><input type="number" id="c_defaultPrice" value="${existing ? existing.defaultPrice : state.settings.sellPrice}"></div>
     </div>`,
     `<button class="btn btn-secondary" onclick="closeModal()">${t('common.cancel')}</button>
      <button class="btn btn-primary" onclick="saveCustomer()">${t('common.save')}</button>`);
 }
 function saveCustomer() {
+  const id = document.getElementById('c_id').value;
   const name = document.getElementById('c_name').value.trim();
   if (!name) { toast(t('toast.invalid'), 'error'); return; }
-  state.customers.push({ id: uid('cus'), name, phone: document.getElementById('c_phone').value.trim(),
-    address: document.getElementById('c_address').value.trim(), defaultPrice: num(document.getElementById('c_defaultPrice').value) });
+  const data = {
+    name,
+    phone: document.getElementById('c_phone').value.trim(),
+    address: document.getElementById('c_address').value.trim(),
+    defaultPrice: num(document.getElementById('c_defaultPrice').value)
+  };
+  if (id) {
+    const c = state.customers.find(x => x.id === id);
+    Object.assign(c, data);
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'customer_edited', details: name });
+  } else {
+    state.customers.push({ id: uid('cus'), ...data });
+  }
   saveState(); closeModal(); toast(t('toast.saved')); renderCustomers();
+}
+function deleteCustomer(id) {
+  const linked = state.invoices.filter(i => i.customerId === id && i.status !== 'cancelled');
+  if (linked.length > 0) { toast(t('msg.customerHasInvoices'), 'error'); return; }
+  confirmDialog(t('toast.confirmDelete'), '', () => {
+    state.customers = state.customers.filter(c => c.id !== id);
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'customer_deleted', details: id });
+    saveState(); toast(t('toast.deleted')); renderCustomers();
+  });
 }
 function openStatement(customerId) {
   const c = state.customers.find(x => x.id === customerId);
@@ -1021,40 +1156,68 @@ function renderExpenses() {
       ${state.expenses.length === 0 ? `<div class="empty"><h4>${t('expenses.noExpenses')}</h4></div>` :
       `<div class="table-wrap"><table><thead><tr>
         <th>${t('common.date')}</th><th>${t('expenses.category')}</th><th>${t('expenses.desc')}</th>
-        <th>${t('common.amount')}</th><th>${t('expenses.receiver')}</th>
+        <th>${t('common.amount')}</th><th>${t('expenses.receiver')}</th><th>${t('common.actions')}</th>
       </tr></thead><tbody>
         ${state.expenses.slice().reverse().map(e => `<tr>
           <td>${esc(e.date)}</td><td>${esc(e.category)}</td><td>${esc(e.desc)}</td>
           <td class="text-danger">${fmt(e.amount)}</td><td>${esc(e.receiver || '-')}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary" onclick="openExpenseModal('${e.id}')" title="${t('common.edit')}">✏️</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteExpense('${e.id}')" title="${t('common.delete')}">🗑️</button>
+          </td>
         </tr>`).join('')}
       </tbody></table></div>`}
     </div>`;
 }
-function openExpenseModal() {
-  openModal(t('expenses.new'), `
+function openExpenseModal(id) {
+  const existing = id ? state.expenses.find(e => e.id === id) : null;
+  openModal((existing ? t('common.edit') : t('expenses.new')), `
+    <input type="hidden" id="e_id" value="${existing ? existing.id : ''}">
     <div class="form-grid">
-      <div class="form-group"><label>${t('common.date')}</label><input type="date" id="e_date" value="${todayISO()}"></div>
+      <div class="form-group"><label>${t('common.date')}</label><input type="date" id="e_date" value="${existing ? existing.date : todayISO()}"></div>
       <div class="form-group"><label>${t('expenses.category')}</label>
-        <select id="e_cat">${state.settings.expenseCategories.map(c => `<option>${esc(c)}</option>`).join('')}</select>
+        <select id="e_cat">${state.settings.expenseCategories.map(c => `<option ${existing && existing.category === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>
       </div>
-      <div class="form-group"><label>${t('common.amount')}</label><input type="number" id="e_amount"></div>
-      <div class="form-group"><label>${t('expenses.receiver')}</label><input id="e_receiver"></div>
-      <div class="form-group full"><label>${t('expenses.desc')}</label><input id="e_desc"></div>
+      <div class="form-group"><label>${t('common.amount')}</label><input type="number" id="e_amount" value="${existing ? existing.amount : ''}"></div>
+      <div class="form-group"><label>${t('expenses.receiver')}</label><input id="e_receiver" value="${existing ? esc(existing.receiver || '') : ''}"></div>
+      <div class="form-group full"><label>${t('expenses.desc')}</label><input id="e_desc" value="${existing ? esc(existing.desc || '') : ''}"></div>
     </div>`,
     `<button class="btn btn-secondary" onclick="closeModal()">${t('common.cancel')}</button>
      <button class="btn btn-primary" onclick="saveExpense()">${t('common.save')}</button>`);
 }
 function saveExpense() {
+  const id = document.getElementById('e_id').value;
   const amount = num(document.getElementById('e_amount').value);
   if (amount <= 0) { toast(t('toast.invalid'), 'error'); return; }
-  const e = { id: uid('exp'), date: document.getElementById('e_date').value,
-    category: document.getElementById('e_cat').value, amount,
+  const data = {
+    date: document.getElementById('e_date').value,
+    category: document.getElementById('e_cat').value,
+    amount,
     desc: document.getElementById('e_desc').value.trim(),
-    receiver: document.getElementById('e_receiver').value.trim(), method: 'cash' };
-  state.expenses.push(e);
-  addCashMovement({ date: e.date, type: 'expense', category: e.category, direction: 'out', amount, method: 'cash', refId: e.id });
-  state.auditLog.push({ id: uid('log'), date: e.date, action: 'expense_created', details: e.category + ' ' + fmt(amount) });
+    receiver: document.getElementById('e_receiver').value.trim(),
+    method: 'cash'
+  };
+  if (id) {
+    const e = state.expenses.find(x => x.id === id);
+    state.cashMovements = state.cashMovements.filter(m => !(m.refId === id && m.type === 'expense'));
+    Object.assign(e, data);
+    addCashMovement({ date: e.date, type: 'expense', category: e.category, direction: 'out', amount, method: 'cash', refId: id });
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'expense_edited', details: e.category + ' ' + fmt(amount) });
+  } else {
+    const e = { id: uid('exp'), ...data };
+    state.expenses.push(e);
+    addCashMovement({ date: e.date, type: 'expense', category: e.category, direction: 'out', amount, method: 'cash', refId: e.id });
+    state.auditLog.push({ id: uid('log'), date: e.date, action: 'expense_created', details: e.category + ' ' + fmt(amount) });
+  }
   saveState(); closeModal(); toast(t('toast.saved')); renderExpenses(); updateCashPill();
+}
+function deleteExpense(id) {
+  confirmDialog(t('toast.confirmDelete'), '', () => {
+    state.cashMovements = state.cashMovements.filter(m => !(m.refId === id && m.type === 'expense'));
+    state.expenses = state.expenses.filter(e => e.id !== id);
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'expense_deleted', details: id });
+    saveState(); toast(t('toast.deleted')); renderExpenses(); updateCashPill();
+  });
 }
 
 /* ========== Cashbox ========== */
@@ -1075,13 +1238,18 @@ function renderCashbox() {
       ${state.cashMovements.length === 0 ? `<div class="empty"><h4>${t('cashbox.noMovements')}</h4></div>` :
       `<div class="table-wrap"><table><thead><tr>
         <th>${t('common.date')}</th><th>${t('cashbox.category')}</th>
-        <th>${t('cashbox.direction')}</th><th>${t('common.amount')}</th><th>${t('cashbox.reason')}</th>
+        <th>${t('cashbox.direction')}</th><th>${t('common.amount')}</th>
+        <th>${t('cashbox.reason')}</th><th>${t('common.actions')}</th>
       </tr></thead><tbody>
         ${state.cashMovements.slice().reverse().map(m => `<tr>
           <td>${esc(m.date)}</td><td>${esc(m.category)}</td>
           <td>${m.direction === 'in' ? `<span class="badge badge-success">${t('cashbox.in')}</span>` : `<span class="badge badge-danger">${t('cashbox.out')}</span>`}</td>
           <td class="${m.direction === 'in' ? 'text-success' : 'text-danger'}">${fmt(m.amount)}</td>
           <td>${esc(m.reason || m.notes || '-')}</td>
+          <td>
+            ${m.type === 'manual' ? `<button class="btn btn-sm btn-secondary" onclick="openCashMovementModal('${m.id}')" title="${t('common.edit')}">✏️</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteCashMovement('${m.id}')" title="${t('common.delete')}">🗑️</button>` : `<span class="text-muted" style="font-size:11px">—</span>`}
+          </td>
         </tr>`).join('')}
       </tbody></table></div>`}
     </div>`;
@@ -1097,30 +1265,59 @@ function saveOpeningCash() {
   state.settings.openingCashSet = true;
   saveState(); closeModal(); toast(t('toast.saved')); navigate(currentPage); updateCashPill();
 }
-function openCashMovementModal() {
-  openModal(t('cashbox.newMovement'), `
+function openCashMovementModal(id) {
+  const existing = id ? state.cashMovements.find(m => m.id === id) : null;
+  openModal((existing ? t('common.edit') : t('cashbox.newMovement')), `
+    <input type="hidden" id="cm_id" value="${existing ? existing.id : ''}">
     <div class="form-grid">
-      <div class="form-group"><label>${t('common.date')}</label><input type="date" id="cm_date" value="${todayISO()}"></div>
+      <div class="form-group"><label>${t('common.date')}</label><input type="date" id="cm_date" value="${existing ? existing.date : todayISO()}"></div>
       <div class="form-group"><label>${t('cashbox.direction')}</label>
-        <select id="cm_dir"><option value="in">${t('cashbox.in')}</option><option value="out">${t('cashbox.out')}</option></select>
+        <select id="cm_dir">
+          <option value="in" ${existing && existing.direction === 'in' ? 'selected' : ''}>${t('cashbox.in')}</option>
+          <option value="out" ${existing && existing.direction === 'out' ? 'selected' : ''}>${t('cashbox.out')}</option>
+        </select>
       </div>
-      <div class="form-group"><label>${t('common.amount')}</label><input type="number" id="cm_amount"></div>
-      <div class="form-group"><label>${t('cashbox.category')}</label><input id="cm_cat"></div>
-      <div class="form-group full"><label>${t('cashbox.reason')}</label><input id="cm_reason"></div>
+      <div class="form-group"><label>${t('common.amount')}</label><input type="number" id="cm_amount" value="${existing ? existing.amount : ''}"></div>
+      <div class="form-group"><label>${t('cashbox.category')}</label><input id="cm_cat" value="${existing ? esc(existing.category || '') : ''}"></div>
+      <div class="form-group full"><label>${t('cashbox.reason')}</label><input id="cm_reason" value="${existing ? esc(existing.reason || '') : ''}"></div>
     </div>`,
     `<button class="btn btn-secondary" onclick="closeModal()">${t('common.cancel')}</button>
      <button class="btn btn-primary" onclick="saveCashMovement()">${t('common.save')}</button>`);
 }
 function saveCashMovement() {
+  const id = document.getElementById('cm_id').value;
   const amount = num(document.getElementById('cm_amount').value);
   if (amount <= 0) { toast(t('toast.invalid'), 'error'); return; }
   const dir = document.getElementById('cm_dir').value;
-  if (dir === 'out' && amount > Calc.cashBalance()) { toast(t('toast.insufficientCash'), 'error'); return; }
-  addCashMovement({ date: document.getElementById('cm_date').value, type: 'manual',
+  const data = {
+    date: document.getElementById('cm_date').value,
+    type: 'manual',
     category: document.getElementById('cm_cat').value || 'manual',
     direction: dir, amount, method: 'cash',
-    reason: document.getElementById('cm_reason').value });
+    reason: document.getElementById('cm_reason').value
+  };
+  if (id) {
+    const existing = state.cashMovements.find(m => m.id === id);
+    const others = state.cashMovements.filter(m => m.id !== id);
+    const balWithout = num(state.settings.openingCash) + others.reduce((s, m) => s + (m.direction === 'in' ? 1 : -1) * num(m.amount), 0);
+    if (dir === 'out' && amount > balWithout) { toast(t('toast.insufficientCash'), 'error'); return; }
+    Object.assign(existing, data);
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'cash_edited', details: id });
+  } else {
+    if (dir === 'out' && amount > Calc.cashBalance()) { toast(t('toast.insufficientCash'), 'error'); return; }
+    addCashMovement(data);
+  }
   saveState(); closeModal(); toast(t('toast.saved')); renderCashbox(); updateCashPill();
+}
+function deleteCashMovement(id) {
+  const m = state.cashMovements.find(x => x.id === id);
+  if (!m) return;
+  if (m.type !== 'manual') { toast(t('msg.cashAutoOnly'), 'error'); return; }
+  confirmDialog(t('toast.confirmDelete'), fmt(m.amount), () => {
+    state.cashMovements = state.cashMovements.filter(x => x.id !== id);
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'cash_deleted', details: id });
+    saveState(); toast(t('toast.deleted')); renderCashbox(); updateCashPill();
+  });
 }
 function addCashMovement(m) {
   state.cashMovements.push({ id: uid('cash'), ...m });
@@ -1148,26 +1345,56 @@ function renderWorkers() {
             <td>${fmt(earned)}</td><td>${fmt(paid)}</td>
             <td class="${bal > 0 ? 'text-danger' : 'text-success'}"><b>${fmt(bal)}</b></td>
             <td>${w.active ? `<span class="badge badge-success">${t('workers.active')}</span>` : `<span class="badge badge-danger">${t('workers.inactive')}</span>`}</td>
-            <td>${bal > 0 ? `<button class="btn btn-sm btn-primary" onclick="openPayWorker('${w.id}')">${t('workers.pay')}</button>` : ''}</td>
+            <td>
+              ${bal > 0 ? `<button class="btn btn-sm btn-primary" onclick="openPayWorker('${w.id}')">${t('workers.pay')}</button> ` : ''}
+              <button class="btn btn-sm btn-secondary" onclick="openWorkerModal('${w.id}')" title="${t('common.edit')}">✏️</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteWorker('${w.id}')" title="${t('common.delete')}">🗑️</button>
+            </td>
           </tr>`;
         }).join('')}
       </tbody></table></div>`}
     </div>`;
 }
-function openWorkerModal() {
-  openModal(t('workers.new'), `
+function openWorkerModal(id) {
+  const existing = id ? state.workers.find(w => w.id === id) : null;
+  openModal((existing ? t('common.edit') : t('workers.new')), `
+    <input type="hidden" id="w_id" value="${existing ? existing.id : ''}">
     <div class="form-grid">
-      <div class="form-group"><label>${t('workers.name')}</label><input id="w_name"></div>
-      <div class="form-group"><label>${t('workers.rate')}</label><input type="number" id="w_rate" value="${state.settings.workerWage}"></div>
+      <div class="form-group"><label>${t('workers.name')}</label><input id="w_name" value="${existing ? esc(existing.name) : ''}"></div>
+      <div class="form-group"><label>${t('workers.rate')}</label><input type="number" id="w_rate" value="${existing ? existing.rate : state.settings.workerWage}"></div>
+      ${existing ? `<div class="form-group"><label>${t('common.status')}</label>
+        <select id="w_active">
+          <option value="1" ${existing.active ? 'selected' : ''}>${t('workers.active')}</option>
+          <option value="0" ${!existing.active ? 'selected' : ''}>${t('workers.inactive')}</option>
+        </select></div>` : ''}
     </div>`,
     `<button class="btn btn-secondary" onclick="closeModal()">${t('common.cancel')}</button>
      <button class="btn btn-primary" onclick="saveWorker()">${t('common.save')}</button>`);
 }
 function saveWorker() {
+  const id = document.getElementById('w_id').value;
   const name = document.getElementById('w_name').value.trim();
   if (!name) { toast(t('toast.invalid'), 'error'); return; }
-  state.workers.push({ id: uid('wrk'), name, rate: num(document.getElementById('w_rate').value), active: true });
+  const rate = num(document.getElementById('w_rate').value);
+  if (id) {
+    const w = state.workers.find(x => x.id === id);
+    w.name = name; w.rate = rate;
+    const activeEl = document.getElementById('w_active');
+    if (activeEl) w.active = activeEl.value === '1';
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'worker_edited', details: name });
+  } else {
+    state.workers.push({ id: uid('wrk'), name, rate, active: true });
+  }
   saveState(); closeModal(); toast(t('toast.saved')); renderWorkers();
+}
+function deleteWorker(id) {
+  const has = state.wageEntries.filter(w => w.workerId === id).length > 0;
+  if (has) { toast(t('msg.workerHasWages'), 'error'); return; }
+  confirmDialog(t('toast.confirmDelete'), '', () => {
+    state.workers = state.workers.filter(w => w.id !== id);
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'worker_deleted', details: id });
+    saveState(); toast(t('toast.deleted')); renderWorkers();
+  });
 }
 function openPayWorker(id) {
   const bal = Calc.workerEarned(id) - Calc.workerPaid(id);
@@ -1196,6 +1423,7 @@ function renderPartners() {
   const p1 = profit * num(state.settings.share1) / 100;
   const p2 = profit * num(state.settings.share2) / 100;
   const d1 = Calc.partnerDrawings('p1'), d2 = Calc.partnerDrawings('p2');
+  const drawingsList = state.drawings.slice().reverse();
   document.getElementById('content').innerHTML = `
     <div class="panel">
       <div class="panel-head"><h3>${t('partners.title')}</h3></div>
@@ -1223,24 +1451,68 @@ function renderPartners() {
           <td><button class="btn btn-sm btn-primary" onclick="openWithdraw('p2')">${t('partners.withdraw')}</button></td>
         </tr>
       </tbody></table></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>${t('partners.drawingsList')}</h3></div>
+      ${drawingsList.length === 0 ? `<p class="text-muted">${t('common.empty')}</p>` :
+      `<div class="table-wrap"><table><thead><tr>
+        <th>${t('common.date')}</th><th>${t('partners.name')}</th>
+        <th>${t('common.amount')}</th><th>${t('common.actions')}</th>
+      </tr></thead><tbody>
+        ${drawingsList.map(d => {
+          const pn = d.partnerId === 'p1' ? state.settings.partner1 : state.settings.partner2;
+          return `<tr>
+            <td>${esc(d.date)}</td><td>${esc(pn)}</td><td class="text-danger">${fmt(d.amount)}</td>
+            <td>
+              <button class="btn btn-sm btn-secondary" onclick="openWithdraw('${d.partnerId}','${d.id}')" title="${t('common.edit')}">✏️</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteDrawing('${d.id}')" title="${t('common.delete')}">🗑️</button>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody></table></div>`}
     </div>`;
 }
-function openWithdraw(partnerId) {
-  openModal(t('partners.withdraw'), `
-    <div class="form-group"><label>${t('partners.availableCash')}</label><input value="${fmt(Calc.cashBalance())}" disabled></div>
-    <div class="form-group"><label>${t('common.amount')}</label><input type="number" id="dw_amount" max="${Calc.cashBalance()}"></div>
-    <div class="form-group"><label>${t('common.date')}</label><input type="date" id="dw_date" value="${todayISO()}"></div>`,
+function openWithdraw(partnerId, drawingId) {
+  const existing = drawingId ? state.drawings.find(d => d.id === drawingId) : null;
+  const balanceFor = Calc.cashBalance() + (existing ? num(existing.amount) : 0);
+  openModal(existing ? t('common.edit') : t('partners.withdraw'), `
+    <input type="hidden" id="dw_id" value="${existing ? existing.id : ''}">
+    <input type="hidden" id="dw_partner" value="${partnerId}">
+    <div class="form-group"><label>${t('partners.availableCash')}</label><input value="${fmt(balanceFor)}" disabled></div>
+    <div class="form-group"><label>${t('common.amount')}</label><input type="number" id="dw_amount" value="${existing ? existing.amount : ''}" max="${balanceFor}"></div>
+    <div class="form-group"><label>${t('common.date')}</label><input type="date" id="dw_date" value="${existing ? existing.date : todayISO()}"></div>`,
     `<button class="btn btn-secondary" onclick="closeModal()">${t('common.cancel')}</button>
      <button class="btn btn-primary" onclick="saveWithdraw('${partnerId}')">${t('common.save')}</button>`);
 }
 function saveWithdraw(partnerId) {
+  const id = document.getElementById('dw_id').value;
+  const existing = id ? state.drawings.find(d => d.id === id) : null;
   const amount = num(document.getElementById('dw_amount').value);
   const date = document.getElementById('dw_date').value;
-  if (amount <= 0 || amount > Calc.cashBalance()) { toast(t('toast.insufficientCash'), 'error'); return; }
-  state.drawings.push({ id: uid('drw'), partnerId, amount, date });
-  addCashMovement({ date, type: 'partner_drawing', category: t('partners.drawings'), direction: 'out', amount, method: 'cash', refId: partnerId });
-  state.auditLog.push({ id: uid('log'), date, action: 'withdrawal', details: fmt(amount) });
+  const balanceFor = Calc.cashBalance() + (existing ? num(existing.amount) : 0);
+  if (amount <= 0 || amount > balanceFor) { toast(t('toast.insufficientCash'), 'error'); return; }
+  if (existing) {
+    state.cashMovements = state.cashMovements.filter(m => !(m.refId === existing.id && m.type === 'partner_drawing'));
+    Object.assign(existing, { amount, date });
+    addCashMovement({ date, type: 'partner_drawing', category: t('partners.drawings'), direction: 'out', amount, method: 'cash', refId: existing.id });
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'drawing_edited', details: existing.id });
+  } else {
+    const drawing = { id: uid('drw'), partnerId, amount, date };
+    state.drawings.push(drawing);
+    addCashMovement({ date, type: 'partner_drawing', category: t('partners.drawings'), direction: 'out', amount, method: 'cash', refId: drawing.id });
+    state.auditLog.push({ id: uid('log'), date, action: 'withdrawal', details: fmt(amount) });
+  }
   saveState(); closeModal(); toast(t('toast.saved')); renderPartners(); updateCashPill();
+}
+function deleteDrawing(id) {
+  const d = state.drawings.find(x => x.id === id);
+  if (!d) return;
+  confirmDialog(t('toast.confirmDelete'), fmt(d.amount), () => {
+    state.cashMovements = state.cashMovements.filter(m => !(m.refId === id && m.type === 'partner_drawing'));
+    state.drawings = state.drawings.filter(x => x.id !== id);
+    state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'drawing_deleted', details: id });
+    saveState(); toast(t('toast.deleted')); renderPartners(); updateCashPill();
+  });
 }
 
 /* ========== Reports ========== */
@@ -1491,16 +1763,19 @@ function renderDashboardCharts() {
   });
   const labels = Object.keys(dailySales).map(d => d.slice(5));
   drawLineChart(document.getElementById('chartSales'), Object.values(dailySales), labels);
-drawBarChart(document.getElementById('chartProfit'), Object.values(dailyProfit), labels, '#FF9F00');
+  drawBarChart(document.getElementById('chartProfit'), Object.values(dailyProfit), labels, '#0FB864');
 }
 
-/* ========== Activity Log ========== */
+/* ========== Activity ========== */
 function renderActivity() {
   const logs = state.auditLog.slice().reverse();
   const icons = {
-    invoice_created: '▤', invoice_cancelled: '✕', batch_created: '▦',
-    expense_created: '◈', payment: '◉', withdrawal: '◑',
-    adjust: '⚙', settings: '⚙', worker_payment: '◐',
+    invoice_created: '▤', invoice_cancelled: '✕', invoice_edited: '✏️', batch_created: '▦',
+    batch_edited: '✏️', batch_deleted: '🗑️', expense_created: '◈', expense_edited: '✏️',
+    expense_deleted: '🗑️', payment: '◉', withdrawal: '◑', drawing_edited: '✏️',
+    drawing_deleted: '🗑️', adjust: '⚙', settings: '⚙', worker_payment: '◐',
+    customer_edited: '✏️', customer_deleted: '🗑️', worker_edited: '✏️',
+    worker_deleted: '🗑️', cash_edited: '✏️', cash_deleted: '🗑️',
   };
   document.getElementById('content').innerHTML = `
     <div class="panel">
@@ -1623,7 +1898,7 @@ function calcSuggestedPrice() {
 /* ========== Settings ========== */
 function renderSettings() {
   const s = state.settings;
-  const accents = ['#22c55e','#3b82f6','#a855f7','#f59e0b','#ef4444','#06b6d4'];
+  const accents = ['#0FB864','#16DD79','#0A9A52','#046A38','#34E68C'];
   document.getElementById('content').innerHTML = `
     <div class="panel">
       <div class="panel-head"><h3>${t('settings.general')}</h3></div>
@@ -1689,10 +1964,8 @@ function saveSettings() {
   s.lowStockThreshold = num(document.getElementById('s_lowStock').value);
   s.sellerPhone = document.getElementById('s_sellerPhone').value.trim();
   s.expenseCategories = document.getElementById('s_cats').value.split(',').map(x => x.trim()).filter(Boolean);
-  saveState();
   state.auditLog.push({ id: uid('log'), date: todayISO(), action: 'settings', details: '' });
-  saveState();
-  toast(t('settings.saved')); updateCashPill();
+  saveState(); toast(t('settings.saved')); updateCashPill();
 }
 
 /* ========== Backup ========== */
@@ -1900,11 +2173,14 @@ window.openModal = openModal;
 window.confirmDialog = confirmDialog;
 window.openBatchModal = openBatchModal;
 window.saveBatch = saveBatch;
+window.deleteBatch = deleteBatch;
 window.openAdjustBatch = openAdjustBatch;
 window.saveAdjustBatch = saveAdjustBatch;
 window.openInvoiceModal = openInvoiceModal;
 window.addInvoiceLine = addInvoiceLine;
 window.saveInvoice = saveInvoice;
+window.openEditInvoice = openEditInvoice;
+window.saveEditInvoice = saveEditInvoice;
 window.cancelInvoice = cancelInvoice;
 window.openCollectModal = openCollectModal;
 window.saveCollect = saveCollect;
@@ -1912,19 +2188,24 @@ window.printInvoice = printInvoice;
 window.repeatInvoice = repeatInvoice;
 window.openCustomerModal = openCustomerModal;
 window.saveCustomer = saveCustomer;
+window.deleteCustomer = deleteCustomer;
 window.openStatement = openStatement;
 window.openExpenseModal = openExpenseModal;
 window.saveExpense = saveExpense;
+window.deleteExpense = deleteExpense;
 window.openOpeningCashModal = openOpeningCashModal;
 window.saveOpeningCash = saveOpeningCash;
 window.openCashMovementModal = openCashMovementModal;
 window.saveCashMovement = saveCashMovement;
+window.deleteCashMovement = deleteCashMovement;
 window.openWorkerModal = openWorkerModal;
 window.saveWorker = saveWorker;
+window.deleteWorker = deleteWorker;
 window.openPayWorker = openPayWorker;
 window.savePayWorker = savePayWorker;
 window.openWithdraw = openWithdraw;
 window.saveWithdraw = saveWithdraw;
+window.deleteDrawing = deleteDrawing;
 window.runReports = runReports;
 window.exportTableCSV = exportTableCSV;
 window.exportTableExcel = exportTableExcel;
